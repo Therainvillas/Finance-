@@ -1,0 +1,247 @@
+{
+  "appName": "Therainvillas",
+  "settings": {
+    "companyName": "Therainvillas",
+    "email": "admin@therainvillas.id",
+    "timezone": "WIB (UTC+7)",
+    "currency": "IDR"
+  },
+  "users": [
+    {
+      "email": "admin@therainvillas.id",
+      "password": "villa123",
+      "name": "Riki Bahtiar",
+      "initials": "RB",
+      "role": "Finance"
+    }
+  ],
+  "properties": [
+    {
+      "id": 1,
+      "name": "Villa Donkris",
+      "location": "Indonesia",
+      "rooms": 4,
+      "rating": 4.9
+    },
+    {
+      "id": 2,
+      "name": "Villa Arisyfa",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.8
+    },
+    {
+      "id": 3,
+      "name": "Villa Wanela",
+      "location": "Indonesia",
+      "rooms": 4,
+      "rating": 4.8
+    },
+    {
+      "id": 4,
+      "name": "Villa Valora",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.7
+    },
+    {
+      "id": 5,
+      "name": "Villa Lembah Singgah",
+      "location": "Indonesia",
+      "rooms": 5,
+      "rating": 4.9
+    },
+    {
+      "id": 6,
+      "name": "Villa Ranna",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.7
+    },
+    {
+      "id": 7,
+      "name": "Villa Echa",
+      "location": "Indonesia",
+      "rooms": 2,
+      "rating": 4.7
+    },
+    {
+      "id": 8,
+      "name": "Villa Rayya",
+      "location": "Indonesia",
+      "rooms": 4,
+      "rating": 4.9
+    },
+    {
+      "id": 9,
+      "name": "Villa Baduo",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.8
+    },
+    {
+      "id": 10,
+      "name": "Villa Calmora",
+      "location": "Indonesia",
+      "rooms": 4,
+      "rating": 4.8
+    },
+    {
+      "id": 11,
+      "name": "Villa Cempaka",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.7
+    },
+    {
+      "id": 12,
+      "name": "Villa Cemara",
+      "location": "Indonesia",
+      "rooms": 5,
+      "rating": 4.9
+    },
+    {
+      "id": 13,
+      "name": "Villa Hala",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.7
+    },
+    {
+      "id": 14,
+      "name": "Villa 4D",
+      "location": "Indonesia",
+      "rooms": 2,
+      "rating": 4.7
+    },
+    {
+      "id": 15,
+      "name": "Villa Aleia",
+      "location": "Indonesia",
+      "rooms": 4,
+      "rating": 4.9
+    },
+    {
+      "id": 16,
+      "name": "Villa Awan",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.8
+    },
+    {
+      "id": 17,
+      "name": "Villa Albi",
+      "location": "Indonesia",
+      "rooms": 4,
+      "rating": 4.8
+    },
+    {
+      "id": 18,
+      "name": "Villa Opung",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.7
+    },
+    {
+      "id": 19,
+      "name": "Villa De Summit",
+      "location": "Indonesia",
+      "rooms": 5,
+      "rating": 4.9
+    },
+    {
+      "id": 20,
+      "name": "Villa RJS Cottage",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.7
+    },
+    {
+      "id": 21,
+      "name": "Villa RJS 2",
+      "location": "Indonesia",
+      "rooms": 2,
+      "rating": 4.7
+    },
+    {
+      "id": 22,
+      "name": "Villa RJS 3",
+      "location": "Indonesia",
+      "rooms": 4,
+      "rating": 4.9
+    },
+    {
+      "id": 23,
+      "name": "Villa Arsy",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.8
+    },
+    {
+      "id": 24,
+      "name": "Villa Jhonsky",
+      "location": "Indonesia",
+      "rooms": 4,
+      "rating": 4.8
+    },
+    {
+      "id": 25,
+      "name": "Villa Thmyi",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.7
+    },
+    {
+      "id": 26,
+      "name": "Villa Twins",
+      "location": "Indonesia",
+      "rooms": 5,
+      "rating": 4.9
+    },
+    {
+      "id": 27,
+      "name": "Villa Cyrena",
+      "location": "Indonesia",
+      "rooms": 3,
+      "rating": 4.7
+    }
+  ],
+  "transactions": [
+    {
+      "id": "INC-20260523-FOWZ",
+      "description": "oko",
+      "villa": "Villa Donkris",
+      "date": "2026-05-23",
+      "amount": 5000000,
+      "type": "Pendapatan",
+      "status": "Lunas",
+      "category": "Booking",
+      "note": "",
+      "createdAt": "2026-05-23T12:28:14.852Z"
+    },
+    {
+      "id": "INC-20260523-2XLF",
+      "description": "ok2",
+      "villa": "Villa Donkris",
+      "date": "2026-05-23",
+      "amount": 5000000,
+      "type": "Pendapatan",
+      "status": "Lunas",
+      "category": "Booking",
+      "note": "",
+      "createdAt": "2026-05-23T12:27:50.864Z"
+    },
+    {
+      "id": "EXP-20260523-E1SO",
+      "description": "ok",
+      "villa": "Villa Donkris",
+      "date": "2026-05-23",
+      "amount": 10000000,
+      "type": "Pengeluaran",
+      "status": "Lunas",
+      "category": "Operasional",
+      "note": "",
+      "createdAt": "2026-05-23T12:27:34.230Z"
+    }
+  ]
+}
