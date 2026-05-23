@@ -798,9 +798,9 @@ const DashboardPage = ({ activeProp, transactions, onAddTransaction, onDeleteTra
   const activePeriod = years.includes(period) ? period : years[0];
 
   const scopedTransactions = useMemo(
-    () => transactions.filter((item) => item.villa === property.name || item.villa === "Semua Villa"),
-    [property.name, transactions]
-  );
+  () => transactions,
+  [transactions]
+);
 
   const yearTransactions = scopedTransactions.filter((item) => item.date?.startsWith(activePeriod));
   const summary = summarize(yearTransactions);
