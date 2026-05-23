@@ -198,8 +198,6 @@ const fmt = (n) =>
 
 const fmtShort = (n) => {
   const value = Number(n || 0);
-  if (Math.abs(value) >= 1e9) return `Rp${(value / 1e9).toFixed(1)}M`;
-  if (Math.abs(value) >= 1e6) return `Rp${Math.round(value / 1e6)}jt`;
   return fmt(value);
 };
 
