@@ -46,7 +46,7 @@ import {
   X,
 } from "lucide-react";
 import "./App.css";
-import logoUrl from "./assets/logo.svg";
+import logoUrl from "./assets/Logo.svg";
 
 // ─── Konstanta ────────────────────────────────────────────────────────────────
 
