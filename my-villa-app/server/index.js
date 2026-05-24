@@ -61,10 +61,10 @@ const defaultDb = {
   users: [
     {
       email: "admin@therainvillas.id",
-      password: "villa123",
+      password: "trv123",
       name: "Riki Bahtiar",
       initials: "RB",
-      role: "Administrator",
+      role: "Finance",
     },
   ],
   properties,
