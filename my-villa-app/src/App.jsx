@@ -795,9 +795,9 @@ const DashboardPage = ({ activeProp, transactions, onAddTransaction, onDeleteTra
   const property = properties[activeProp];
   const activePeriod = years.includes(period) ? period : years[0];
 
-  const scopedTransactions = useMemo(
-  () => transactions,
-  [transactions]
+ const scopedTransactions = useMemo(
+  () => transactions.filter((item) => item.villa === property.name || item.villa === "Semua Villa"),
+  [property.name, transactions]
 );
 
   const yearTransactions = scopedTransactions.filter((item) => item.date?.startsWith(activePeriod));
@@ -810,7 +810,19 @@ const DashboardPage = ({ activeProp, transactions, onAddTransaction, onDeleteTra
   const breakdown = buildExpenseBreakdown(yearTransactions);
   const paidRate = yearTransactions.length ? Math.round((summary.paid / yearTransactions.length) * 100) : 0;
 
-  const incomeTrend = trendValue(sumByType(currentMonth, "Pendapatan"), sumByType(previousMonth, "Pendapatan"));
+  // Pendapatan hari ini — dari SEMUA villa (tidak difilter per villa)
+  const todayAllIncome = useMemo(
+    () => transactions.filter((item) => item.type === "Pendapatan" && item.date === todayISO()),
+    [transactions]
+  );
+  const todayIncomeTotal = sumByType(todayAllIncome, "Pendapatan");
+  const yesterdayISO = (() => { const d = new Date(); d.setDate(d.getDate() - 1); return d.toISOString().slice(0, 10); })();
+  const yesterdayAllIncome = useMemo(
+    () => transactions.filter((item) => item.type === "Pendapatan" && item.date === yesterdayISO),
+    [transactions, yesterdayISO]
+  );
+  const todayIncomeTrend = trendValue(todayIncomeTotal, sumByType(yesterdayAllIncome, "Pendapatan"));
+
   const expenseTrend = trendValue(sumByType(currentMonth, "Pengeluaran"), sumByType(previousMonth, "Pengeluaran"));
   const profitTrend = trendValue(summarize(currentMonth).profit, summarize(previousMonth).profit);
 
@@ -836,7 +848,7 @@ const DashboardPage = ({ activeProp, transactions, onAddTransaction, onDeleteTra
       />
 
       <div className="kpi-grid">
-        <KpiCard title="Total Pendapatan" value={fmtShort(summary.income)} trend={incomeTrend} icon={TrendingUp} accent={C.primary} bg={C.primaryBg} sub="vs bulan lalu" />
+        <KpiCard title="Pendapatan Hari Ini" value={fmtShort(todayIncomeTotal)} trend={todayIncomeTrend} icon={TrendingUp} accent={C.primary} bg={C.primaryBg} sub={`${todayAllIncome.length} transaksi · semua villa`} />
         <KpiCard title="Laba Bersih" value={fmtShort(summary.profit)} trend={profitTrend} icon={Wallet} accent={C.emerald} bg={C.emeraldBg} sub="vs bulan lalu" />
         <KpiCard title="Total Pengeluaran" value={fmtShort(summary.expense)} trend={expenseTrend} trendInverse icon={Receipt} accent={C.rose} bg={C.roseBg} sub="vs bulan lalu" />
         <KpiCard title="Transaksi Lunas" value={`${paidRate}%`} trend={paidRate >= 80 ? 4 : -6} icon={Check} accent={C.sapphire} bg={C.sapphireBg} sub={`${summary.paid} dari ${yearTransactions.length} transaksi`} />
@@ -1258,7 +1270,7 @@ const TransactionTable = ({
 
 const PendapatanPage = ({ transactions, onAddTransaction, onDeleteTransaction, onEditTransaction, onExport, searchQuery }) => {
   const rows = transactions.filter((item) => item.type === "Pendapatan");
-  const currentRows = filterByMonth(rows, todayISO().slice(0, 7));
+  const todayRows = rows.filter((item) => item.date === todayISO());
   const activeBookings = rows.filter((item) => item.status !== "Lunas").length;
   const average = rows.length ? sumByType(rows, "Pendapatan") / rows.length : 0;
 
@@ -1266,7 +1278,7 @@ const PendapatanPage = ({ transactions, onAddTransaction, onDeleteTransaction, o
     <div className="page-stack">
       <PageHeader title="Pendapatan" desc="Semua pemasukan dari pemesanan villa" />
       <div className="kpi-grid three">
-        <KpiCard title="Total Bulan Ini" value={fmtShort(sumByType(currentRows, "Pendapatan"))} trend={12} icon={TrendingUp} accent={C.primary} bg={C.primaryBg} sub="bulan berjalan" />
+        <KpiCard title="Pendapatan Hari Ini" value={fmtShort(sumByType(todayRows, "Pendapatan"))} trend={todayRows.length > 0 ? 12 : 0} icon={TrendingUp} accent={C.primary} bg={C.primaryBg} sub={`${todayRows.length} transaksi hari ini`} />
         <KpiCard title="Belum Lunas" value={String(activeBookings)} trend={activeBookings ? -2 : 6} trendInverse icon={Clock} accent={C.amber} bg={C.amberBg} sub="perlu dipantau" />
         <KpiCard title="Rata-rata Transaksi" value={fmtShort(average)} trend={8} icon={Star} accent={C.emerald} bg={C.emeraldBg} sub="semua pemasukan" />
       </div>
