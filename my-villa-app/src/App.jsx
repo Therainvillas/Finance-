@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
   Area,
   AreaChart,
@@ -434,6 +434,44 @@ const generatePrintHtml = (items, summary, label, settings) => {
 </html>`;
 };
 
+// ─── Toast System ─────────────────────────────────────────────────────────────
+
+const ToastContainer = ({ toasts, onDismiss }) => (
+  <div className="toast-container">
+    {toasts.map((toast) => (
+      <div
+        key={toast.id}
+        className={`toast toast-${toast.type}`}
+        onClick={() => onDismiss(toast.id)}
+      >
+        <div className="toast-icon">
+          {toast.type === "success" ? <Check size={16} /> : toast.type === "error" ? <X size={16} /> : <Bell size={16} />}
+        </div>
+        <div className="toast-body">
+          <strong>{toast.title}</strong>
+          {toast.message && <p>{toast.message}</p>}
+        </div>
+        <button className="toast-close" onClick={(e) => { e.stopPropagation(); onDismiss(toast.id); }}>
+          <X size={14} />
+        </button>
+      </div>
+    ))}
+  </div>
+);
+
+const useToast = () => {
+  const [toasts, setToasts] = useState([]);
+  const show = useCallback((title, message = "", type = "success") => {
+    const id = Date.now() + Math.random();
+    setToasts((prev) => [...prev, { id, title, message, type }]);
+    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 3500);
+  }, []);
+  const dismiss = useCallback((id) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  }, []);
+  return { toasts, show, dismiss };
+};
+
 // ─── Komponen Kecil ───────────────────────────────────────────────────────────
 
 const StatusChip = ({ status }) => {
@@ -788,6 +826,41 @@ const TopBar = ({ user, notif, onClearNotif, onExport, transactions, globalSearc
 
 // ─── Dashboard ────────────────────────────────────────────────────────────────
 
+const RecentActivity = ({ transactions }) => {
+  const recent = transactions.slice(0, 6);
+  if (!recent.length) return null;
+  return (
+    <section className="panel recent-activity">
+      <div className="panel-header">
+        <div>
+          <h2>Aktivitas Terakhir</h2>
+          <p>Transaksi terbaru</p>
+        </div>
+      </div>
+      <div className="activity-timeline">
+        {recent.map((item) => (
+          <div key={item.id} className="activity-item">
+            <span
+              className="activity-dot"
+              style={{ background: item.type === "Pendapatan" ? C.primary : C.rose }}
+            />
+            <div className="activity-content">
+              <strong>{item.description}</strong>
+              <span>{item.villa} · {formatDate(item.date)}</span>
+            </div>
+            <span
+              className="activity-amount"
+              style={{ color: item.type === "Pendapatan" ? C.primary : C.rose }}
+            >
+              {item.type === "Pendapatan" ? "+" : "-"}{fmtShort(item.amount)}
+            </span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+};
+
 const DashboardPage = ({ activeProp, transactions, onAddTransaction, onDeleteTransaction, onEditTransaction, onExport, searchQuery }) => {
   const years = useMemo(() => getAvailableYears(transactions), [transactions]);
   const [period, setPeriod] = useState(years[0]);
@@ -795,18 +868,15 @@ const DashboardPage = ({ activeProp, transactions, onAddTransaction, onDeleteTra
   const property = properties[activeProp];
   const activePeriod = years.includes(period) ? period : years[0];
 
- const scopedTransactions = useMemo(
-  () => transactions.filter((item) => item.villa === property.name || item.villa === "Semua Villa"),
-  [property.name, transactions]
-);
-
-  const yearTransactions = scopedTransactions.filter((item) => item.date?.startsWith(activePeriod));
+  // ✅ FIX: Dashboard sekarang menampilkan SEMUA transaksi, tidak hanya yang terkait villa aktif
+  // Ini memastikan pengeluaran dari villa manapun selalu muncul di dashboard
+  const yearTransactions = transactions.filter((item) => item.date?.startsWith(activePeriod));
   const summary = summarize(yearTransactions);
   const currentKey = todayISO().slice(0, 7);
   const previousKey = previousMonthKey(currentKey);
-  const currentMonth = filterByMonth(scopedTransactions, currentKey);
-  const previousMonth = filterByMonth(scopedTransactions, previousKey);
-  const chartData = buildMonthlyData(scopedTransactions, activePeriod);
+  const currentMonth = filterByMonth(transactions, currentKey);
+  const previousMonth = filterByMonth(transactions, previousKey);
+  const chartData = buildMonthlyData(transactions, activePeriod);
   const breakdown = buildExpenseBreakdown(yearTransactions);
   const paidRate = yearTransactions.length ? Math.round((summary.paid / yearTransactions.length) * 100) : 0;
 
@@ -830,7 +900,7 @@ const DashboardPage = ({ activeProp, transactions, onAddTransaction, onDeleteTra
     <div className="page-stack">
       <PageHeader
         title="Dashboard Keuangan"
-        desc={`${property.name} | ${property.location}`}
+        desc={`Semua Villa | Ringkasan ${activePeriod}`}
         actions={
           <>
             <div className="year-selector">
@@ -840,7 +910,7 @@ const DashboardPage = ({ activeProp, transactions, onAddTransaction, onDeleteTra
                 </button>
               ))}
             </div>
-            <button className="secondary-button" onClick={() => onExport(yearTransactions, `Dashboard ${property.name}`)}>
+            <button className="secondary-button" onClick={() => onExport(yearTransactions, `Dashboard Semua Villa`)}>
               <Download size={15} /> Export
             </button>
           </>
@@ -932,10 +1002,16 @@ const DashboardPage = ({ activeProp, transactions, onAddTransaction, onDeleteTra
               </div>
             </>
           ) : (
-            <div className="empty-state">Belum ada pengeluaran pada periode ini.</div>
+            <div className="empty-state-card">
+              <Receipt size={32} style={{ color: C.textMuted, opacity: 0.4 }} />
+              <p>Belum ada pengeluaran pada periode ini.</p>
+            </div>
           )}
         </section>
       </div>
+
+      {/* Recent Activity Timeline */}
+      <RecentActivity transactions={transactions} />
 
       <TransactionTable
         transactions={transactions}
@@ -1247,7 +1323,17 @@ const TransactionTable = ({
             ))}
           </tbody>
         </table>
-        {!filtered.length && <div className="empty-state">Belum ada transaksi.</div>}
+        {!filtered.length && (
+          <div className="empty-state-card">
+            <FileText size={32} style={{ color: C.textMuted, opacity: 0.4 }} />
+            <p>Belum ada transaksi yang sesuai filter.</p>
+            {onAddTransaction && (
+              <button className="primary-button compact" style={{ marginTop: 8 }} onClick={() => setShowModal(true)}>
+                <Plus size={15} /> Tambah Transaksi
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
       {showModal && (
@@ -1645,6 +1731,7 @@ export default function App() {
   const [page, setPage] = useState("dashboard");
   const [activeProp, setActiveProp] = useState(0);
   const [notif, setNotif] = useState(3);
+  const toast = useToast();
   const [backendStatus, setBackendStatus] = useState("checking");
   const [globalSearch, setGlobalSearch] = useState(""); // ✅ BARU: global search
 
@@ -1694,6 +1781,11 @@ export default function App() {
   const addTransaction = async (transaction) => {
     setStoredTransactions((current) => [transaction, ...normalizeTransactions(current)]);
     setNotif((c) => c + 1);
+    toast.show(
+      "Transaksi Ditambahkan",
+      `${transaction.type}: ${transaction.description} — ${fmt(transaction.amount)}`,
+      "success"
+    );
     try {
       const data = await apiRequest("/transactions", { method: "POST", body: JSON.stringify(transaction) });
       setStoredTransactions(normalizeTransactions(data.transactions));
@@ -1701,12 +1793,16 @@ export default function App() {
     } catch { setBackendStatus("offline"); }
   };
 
-  // ✅ BARU: Edit transaksi (upsert: hapus ID lama, masukkan yang baru)
   const editTransaction = async (transaction) => {
     setStoredTransactions((current) => [
       transaction,
       ...normalizeTransactions(current).filter((item) => item.id !== transaction.id),
     ]);
+    toast.show(
+      "Transaksi Diperbarui",
+      `${transaction.description} berhasil diubah.`,
+      "success"
+    );
     try {
       const data = await apiRequest("/transactions", { method: "POST", body: JSON.stringify(transaction) });
       setStoredTransactions(normalizeTransactions(data.transactions));
@@ -1716,6 +1812,7 @@ export default function App() {
 
   const deleteTransaction = async (id) => {
     setStoredTransactions((current) => normalizeTransactions(current).filter((item) => item.id !== id));
+    toast.show("Transaksi Dihapus", "Data transaksi telah dihapus.", "info");
     try {
       const data = await apiRequest(`/transactions/${encodeURIComponent(id)}`, { method: "DELETE" });
       setStoredTransactions(normalizeTransactions(data.transactions));
@@ -1801,6 +1898,8 @@ export default function App() {
         />
         <main className="content">{renderPage()}</main>
       </div>
+
+      <ToastContainer toasts={toast.toasts} onDismiss={toast.dismiss} />
     </div>
   );
 }

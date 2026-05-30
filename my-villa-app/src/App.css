@@ -1572,3 +1572,319 @@
     grid-column: 1;
   }
 }
+
+/* ─── Toast Notifications ──────────────────────────────────────────────────── */
+
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.toast {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  min-width: 320px;
+  max-width: 420px;
+  padding: 14px 16px;
+  border-radius: 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: 0 12px 40px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(15, 23, 42, 0.08);
+  pointer-events: auto;
+  cursor: pointer;
+  animation: toast-in 0.35s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+.toast:hover {
+  box-shadow: 0 16px 48px rgba(15, 23, 42, 0.2);
+  transform: translateY(-2px);
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(60px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+
+.toast-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+  color: var(--emerald);
+  background: rgba(5, 150, 105, 0.1);
+}
+
+.toast-error .toast-icon {
+  color: var(--rose);
+  background: var(--rose-bg);
+}
+
+.toast-info .toast-icon {
+  color: var(--sapphire);
+  background: rgba(37, 99, 235, 0.08);
+}
+
+.toast-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-body strong {
+  display: block;
+  color: var(--text);
+  font-family: "Plus Jakarta Sans", Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.toast-body p {
+  margin: 3px 0 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.toast-close {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  color: var(--text-muted);
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: opacity 0.15s;
+}
+
+.toast-close:hover {
+  opacity: 1;
+  background: var(--surface-low);
+}
+
+/* ─── Recent Activity Timeline ─────────────────────────────────────────────── */
+
+.recent-activity {
+  overflow: hidden;
+}
+
+.activity-timeline {
+  display: flex;
+  flex-direction: column;
+  margin-top: 16px;
+}
+
+.activity-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s ease;
+}
+
+.activity-item:last-child {
+  border-bottom: none;
+}
+
+.activity-item:hover {
+  background: var(--surface-low);
+  margin: 0 -22px;
+  padding: 12px 22px;
+  border-radius: 6px;
+}
+
+.activity-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.activity-dot::after {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 999px;
+  background: inherit;
+  opacity: 0.18;
+}
+
+.activity-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.activity-content strong {
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.activity-content span {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.activity-amount {
+  font-family: "Plus Jakarta Sans", Inter, sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* ─── Improved Empty State ─────────────────────────────────────────────────── */
+
+.empty-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 180px;
+  padding: 32px 24px;
+  text-align: center;
+}
+
+.empty-state-card p {
+  color: var(--text-muted);
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ─── Micro-animation polish ───────────────────────────────────────────────── */
+
+.kpi-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.kpi-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(15, 23, 42, 0.1);
+}
+
+.nav-button {
+  transition: all 0.15s ease;
+}
+
+.primary-button,
+.secondary-button {
+  transition: all 0.15s ease;
+}
+
+.secondary-button:hover {
+  background: rgba(0, 105, 72, 0.12);
+  border-color: rgba(0, 105, 72, 0.3);
+}
+
+.property-card {
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.property-card:hover {
+  transform: translateY(-3px);
+}
+
+.data-table tbody tr {
+  transition: background 0.12s ease;
+}
+
+.data-table tbody tr:hover {
+  background: var(--surface-low);
+}
+
+.icon-button {
+  transition: all 0.15s ease;
+}
+
+.icon-button:hover {
+  background: var(--surface-low);
+  border-color: var(--border-mid);
+}
+
+.modal-backdrop {
+  animation: backdrop-in 0.2s ease;
+}
+
+.modal {
+  animation: modal-in 0.25s cubic-bezier(0.21, 1.02, 0.73, 1);
+}
+
+@keyframes backdrop-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes modal-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.report-row {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.report-row:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(15, 23, 42, 0.08);
+}
+
+/* ─── Toast responsive ─────────────────────────────────────────────────────── */
+
+@media (max-width: 860px) {
+  .toast-container {
+    top: auto;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+  }
+
+  .toast {
+    min-width: auto;
+    max-width: none;
+  }
+
+  .activity-item:hover {
+    margin: 0;
+    padding: 12px 0;
+  }
+}
